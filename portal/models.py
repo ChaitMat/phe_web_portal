@@ -16,6 +16,14 @@ class Event(models.Model):
     #Batch size
     batch_size = models.PositiveIntegerField(help_text = 'Enter batch size.')
 
+    #Type of event
+    EVENT_TYPES = (
+        ('t', 'Trek'),
+        ('c', 'Camping'),
+    )
+
+    event_type = models.CharField(max_length = 1, choices = EVENT_TYPES, default = 't', help_text = 'Type of event(Trek/Camping)')
+
     def __str__(self):
         return self.event_name
 

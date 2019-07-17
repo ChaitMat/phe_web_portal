@@ -1,3 +1,9 @@
 from django.shortcuts import render
 
-# Create your views here.
+from .models import Event, Booking
+
+def index(request):
+    """View function for home page"""
+
+    
+

@@ -1,0 +1,31 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+    <span class="card-title">Current Events</span>
+    
+    {% if events %}
+    
+        <ul class="collapsible popout" data-collapsible = "accordion">
+    
+        {% for event in events %}
+        
+            
+                <li>
+                    <div class="collapsible-header"><div>{{event.event_name}}</div><div class="right" style = 'display: block;'>{{event.total}}</div></div>
+                    <div class="collapsible-body"><span>{{event.total}}</span></div>
+                </li>
+           
+            
+        {% endfor %}
+        
+         </ul>
+        
+    {% else %}
+    
+        <p>There are no current events.</p>
+    
+    {% endif %}
+
+
+{% endblock %}

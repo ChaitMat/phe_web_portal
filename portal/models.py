@@ -33,7 +33,7 @@ class Event(models.Model):
 
 class Booking(models.Model):
 
-    event = models.ForeignKey(Event, on_delete = models.CASCADE)
+    event = models.ForeignKey(Event, on_delete = models.CASCADE, related_name = 'bookings')
 
     #Timestamp of the booking made
     time_stamp = models.DateTimeField(auto_now_add = True, help_text = 'Date on which booking was registered.')

@@ -12,7 +12,16 @@
         
             
                 <li>
-                    <div class="collapsible-header"><div>{{event.event_name}}</div><div class="right" style = 'display: block;'>{{event.total}}</div></div>
+                    <div class="collapsible-header" style ="display: block">
+                        <div class="row" style ="margin-bottom: 0">
+                            <div class="col s6 m6 l6">
+                                <div>{{event.event_name}}</div>
+                            </div>
+                            <div class="col s6 m6 l6">
+                                <div class="right-align">{{event.total}}</div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="collapsible-body"><span>{{event.total}}</span></div>
                 </li>
            

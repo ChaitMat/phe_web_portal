@@ -37,7 +37,7 @@
             <div class="navbar-fixed">        
                 <nav class = "navbar">       
                     <div class="nav-wrapper">
-                        <a href="#" class="brand-logo grey-text text-darken-4" style = 'padding-left: 15px !important;'>PHE Web Portal</a>
+                        <a href="{% url 'index'%}" class="brand-logo grey-text text-darken-4" style = 'padding-left: 15px !important;'>PHE Web Portal</a>
                         <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                     </div>
                 </nav>              
@@ -45,8 +45,8 @@
         
             <!-- Side bar --> 
             <ul id="slide-out" class="sidenav sidenav-fixed">
-                <li><a href="#!">First Sidebar Link</a></li>
-                <li><a href="#!">Second Sidebar Link</a></li>
+                <li><a href="{% url 'index'%}">View current events</a></li>
+                <li><a href="{% url 'event-new'%}">Create new event</a></li>               
             </ul>
 
              <!-- grid/cards -->
@@ -72,6 +72,7 @@
                 $('.collapsible').collapsible();
                 $('.datepicker').datepicker({format : 'dd/mm/yyyy'});
                 $('select').formSelect();
+                $('.modal').modal();
 
             })
         </script>

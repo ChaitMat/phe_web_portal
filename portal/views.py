@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from django.views import generic
-from django.views.generic.edit import FormView
 from django.db.models import Sum
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from .models import Event, Booking
 
@@ -23,15 +23,30 @@ def eventList(request):
 
 def new_event_form(request):
 
-    form = NewEventForm
 
-    context = {
+    if request.method == "POST":
 
-        'form' : form
+        form = NewEventForm(request.POST)
 
-    }
- 
-    return render(request, 'portal/new_event.html', context)
+        if form.is_valid():
+
+            event = form.save()
+
+            event.save()
+
+            return HttpResponseRedirect(reverse('index') )
+
+    else:
+
+        form = NewEventForm()
+
+    context = {'form': form}
+
+    return render(request, 'portal/event_form.html', context)
+
+          
+
+
 
 
 

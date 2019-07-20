@@ -1,15 +1,22 @@
 from django import forms
+from django.forms import ModelForm
 from portal.models import Event
 
-class NewEventForm(forms.Form):
+from .choices import EVENT_TYPES
 
-    event_name = forms.CharField(max_length = 100, strip =True, help_text = 'Enter the name of the event.')
+class NewEventForm(ModelForm):
 
-    event_date = forms.DateField(help_text = 'Enter date of the event.', widget = forms.SelectDateWidget)
+    class Meta:
 
-    batch_size = forms.IntegerField(help_text = 'Enter batch size.')
+        model = Event
+        fields = '__all__'
 
-    # event_type = forms.ChoiceField(choices = ['Trek', 'Camping'], help_text = 'Enter batch size.')
+    event_date = forms.DateField(
+        widget = forms.TextInput(
+                                attrs = {
 
-
-
+                                    'class' : 'datepicker',
+                                }
+                            ),
+        input_formats=('%d/%m/%Y', )
+        )

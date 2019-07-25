@@ -11,7 +11,7 @@
     </br>
     <a class="waves-effect waves-light btn" href = "{% url 'event-edit' pk=event.pk %}">Edit event</a>
     <a class="waves-effect waves-light btn modal-trigger" href = "#delete-btn">Delete Event</a>
-
+   
     <div id="delete-btn" class="modal">
         <div class="modal-content">
               <h4>Delete Event: {{event.event_name}}</h4>
@@ -21,5 +21,58 @@
               <a href="{% url 'event-delete' pk=event.pk %}" class="modal-close waves-effect waves-green btn-flat">Yes</a>
               <a href="#!" class="modal-close waves-effect waves-green btn-flat">No</a>
         </div>
-    </div>   
+    </div>  
+    
+    <div class="row">
+        <div class="col s12 m12 l12">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">Add Bookings</span>
+                    <form action="" method="post" id="post-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="event" value={{event.pk}}>
+                        <table>
+                            {{ form.as_table }}
+                        </table>
+                        </br>
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12 m12 l12">
+            <div class="card">
+                <div class="card-content">
+                    <span class="card-title">All Bookings</span>
+                    <span><h5>Total participants booked : <span id = "total-participants">{{total_participants}}</span></h5></span>
+                    <table class="responsive-table">
+                        
+                            <thead>
+                                <tr>
+                                    <th>Booked by</th>
+                                    <th>No. of participants</th>
+                                    <th>Contact number</th>
+                                    <th>Date of payment</th>
+                                    <th>Mode of payment</th>
+                                </tr>
+                            </thead>
+                            <tbody id = "booking-list">
+                            {% for booking in bookings%}
+                                <tr>
+                                    <td>{{ booking.booked_by }}</td>
+                                    <td>{{ booking.participants_count }}</td>
+                                    <td>{{ booking.contact_number }}</td>
+                                    <td>{{ booking.date_of_payment }}</td>
+                                    <td>{{ booking.mode_of_payment }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

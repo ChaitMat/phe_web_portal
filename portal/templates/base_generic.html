@@ -68,11 +68,33 @@
         <script>
             $(document).ready(function(){
 
+
                 $('.sidenav').sidenav();
                 $('.collapsible').collapsible();
                 $('.datepicker').datepicker({format : 'dd/mm/yyyy'});
                 $('select').formSelect();
                 $('.modal').modal();
+
+                $('#post-form').on('submit', function(event){
+                    event.preventDefault();
+                    var serializedData = $(this).serialize();
+
+                    $.ajax({
+                        type : 'POST',
+                        url : "{% url 'event-detail' pk=event.pk %}",
+                        data : serializedData,
+                        success : function(data){
+                            $('#post-form')[0].reset();
+                            $('#total-participants').text(data.total_participants);
+                            $('#booking-list').append("<tr> <td>" + data.booked_by 
+                            + "</td> <td>" + data.participants_count 
+                            + "</td> <td>" + data.contact_number 
+                            + "</td> <td>" + data.date_of_payment 
+                            + "</td> <td>" + data.mode_of_payment 
+                            +  "</td> </tr>" );
+                        },
+                    })
+                });
 
             })
         </script>

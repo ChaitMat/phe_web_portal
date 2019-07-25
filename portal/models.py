@@ -43,6 +43,10 @@ class Booking(models.Model):
     # Mobile number of the participant who booked
     contact_number = models.PositiveIntegerField(help_text = 'Enter mobile number.', null = True, blank = True)
 
+    date_of_payment = models.DateField(help_text = 'Date of payment.')
+
+    mode_of_payment = models.CharField(max_length = 100, help_text = 'Enter mode of payment.')
+
     def __str__(self):
         return self.booked_by
 

@@ -10,12 +10,23 @@
     <p><strong>Event type: </strong>{% if event.event_type == 't' %}Trek{% else  %}Camping{%endif%}</p>
     </br>
     <a class="waves-effect waves-light btn" href = "{% url 'event-edit' pk=event.pk %}">Edit event</a>
-    <a class="waves-effect waves-light btn modal-trigger" href = "#delete-btn">Delete Event</a>
+    <a class="waves-effect waves-light btn modal-trigger" href = "#delete-event">Delete Event</a>
    
-    <div id="delete-btn" class="modal">
+    <div id="delete-event" class="modal">
         <div class="modal-content">
               <h4>Delete Event: {{event.event_name}}</h4>
-              <p>Are you sure you want to event?</p>
+              <p>Are you sure you want to delete the event?</p>
+        </div>
+        <div class="modal-footer">
+              <a href="{% url 'event-delete' pk=event.pk %}" class="modal-close waves-effect waves-green btn-flat">Yes</a>
+              <a href="#!" class="modal-close waves-effect waves-green btn-flat">No</a>
+        </div>
+    </div>
+    
+    <div id="delete-booking" class="modal">
+        <div class="modal-content">
+              <h4>Delete booking/s by {{booking.booking_name}}</h4>
+              <p>Are you sure you want to delete this booking?</p>
         </div>
         <div class="modal-footer">
               <a href="{% url 'event-delete' pk=event.pk %}" class="modal-close waves-effect waves-green btn-flat">Yes</a>
@@ -57,16 +68,30 @@
                                     <th>Contact number</th>
                                     <th>Date of payment</th>
                                     <th>Mode of payment</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
                                 </tr>
                             </thead>
                             <tbody id = "booking-list">
                             {% for booking in bookings%}
-                                <tr>
+                                <tr id = "booking-{{booking.pk}}">
                                     <td>{{ booking.booked_by }}</td>
                                     <td>{{ booking.participants_count }}</td>
                                     <td>{{ booking.contact_number }}</td>
                                     <td>{{ booking.date_of_payment }}</td>
                                     <td>{{ booking.mode_of_payment }}</td>
+                                    <td>
+                                        <a class="btn waves-effect waves-light" 
+                                            href="{% url 'booking-edit' pk=event.pk bk=booking.pk %}">
+                                            <i class="material-icons">edit</i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a class = "btn waves-effect waves-light modal-trigger"
+                                            href = "#delete-booking">
+                                            <i class="material-icons">delete</i>
+                                        </a>
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -75,4 +100,32 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+
+    $('#post-form').on('submit', function(event){
+        event.preventDefault();
+        var serializedData = $(this).serialize();
+
+        $.ajax({
+            type : 'POST',
+            url : "{% url 'booking-new' pk=event.pk %}",
+            data : serializedData,
+            success : function(data){
+                $('#post-form')[0].reset();
+                $('#total-participants').text(data.total_participants);
+                console.log(data.pk)
+                $('#booking-list').append("<tr> <td>" + data.booked_by 
+                + "</td> <td>" + data.participants_count 
+                + "</td> <td>" + data.contact_number 
+                + "</td> <td>" + data.date_of_payment 
+                + "</td> <td>" + data.mode_of_payment
+                + "</td> <td>" + "<a href='"+ data.pk + "/booking/" + data.bk + "/edit'><i class='material-icons'>edit</i></a>"
+                + "</td> <td>" + "<a href='"+ data.pk + "/booking/" + data.bk + "/delete'><i class='material-icons'>delete</i></a>"
+                +  "</td> </tr>" );
+            },
+        })
+    });
+
 {% endblock %}

@@ -22,7 +22,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="collapsible-body"><span>{{event.total}}</span></div>
+                    <div class="collapsible-body"><div>{{event.total}}</div><div><a href="{% url 'event-detail' pk=event.pk %}">Go to event</a></div></div>
                 </li>
            
             

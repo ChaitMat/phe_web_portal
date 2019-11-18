@@ -1,0 +1,26 @@
+{% for booking in bookings%}
+    <tr id = "booking-{{booking.pk}}">
+        <td>{{ booking.booked_by }}</td>
+        <td>{{ booking.participants_count }}</td>
+        <td>{{ booking.contact_number }}</td>
+        <td>{{ booking.date_of_payment }}</td>
+        <td>{{ booking.mode_of_payment }}</td>
+        <td>
+            <a class="btn waves-effect waves-light" 
+                href="{% url 'booking-edit' pk=event.pk bk=booking.pk %}">
+                <i class="material-icons">edit</i>
+            </a>
+        </td>
+        <td>
+            <a class = "btn waves-effect waves-light js-delete-booking"
+                data-name = "{{booking.booked_by}}"
+                data-url = "{% url 'booking-delete' pk=event.pk bk=booking.pk %}">
+                <i class="material-icons">delete</i>
+            </a>
+        </td>
+    </tr>
+{% empty %}
+    <tr>
+      <td colspan="8" class="text-center bg-warning">No booking registered.</td>
+    </tr>
+{% endfor %}

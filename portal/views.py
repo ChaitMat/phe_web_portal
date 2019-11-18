@@ -3,10 +3,12 @@ import json
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum
-from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from django.urls import reverse
 from django.views import generic
+from django.template.loader import render_to_string 
+
 
 
 from .models import Event, Booking
@@ -49,6 +51,7 @@ def new_event_form(request):
 
     return render(request, 'portal/event_new_form.html', context)
 
+
 # View details of an event 
 def event_detail_view(request, pk):
     
@@ -68,6 +71,7 @@ def event_detail_view(request, pk):
         }
     
     return render(request, 'portal/event_detail.html', context)
+
 
 # Edit an existing event
 def edit_event_form(request, pk):
@@ -101,6 +105,7 @@ def edit_event_form(request, pk):
 
     return render(request, 'portal/event_edit_form.html', context)
 
+
 # Delete an existing event
 def delete_event(request, pk):
 
@@ -108,6 +113,7 @@ def delete_event(request, pk):
     event.delete()
 
     return HttpResponseRedirect(reverse('index'))
+
 
 # Add bookings to an existing event
 def add_bookings(request, pk):
@@ -124,7 +130,7 @@ def add_bookings(request, pk):
 
             b = form.save(commit=False)
 
-            new_booking = event.bookings.create(
+            event.bookings.create(
                             booked_by = b.booked_by,
                             participants_count = b.participants_count,
                             contact_number = b.contact_number,
@@ -132,20 +138,18 @@ def add_bookings(request, pk):
                             mode_of_payment = b.mode_of_payment,
                         )
 
+            update_bookings = event.bookings.all()
+
             total_participants = event.bookings.all().aggregate(Sum('participants_count'))['participants_count__sum']
 
-            response_data = {}
+            data = dict()
 
-            response_data['booked_by'] = b.booked_by
-            response_data['participants_count'] = b.participants_count
-            response_data['contact_number'] = b.contact_number
-            response_data['date_of_payment'] = b.date_of_payment.strftime('%B %-d, %Y')
-            response_data['mode_of_payment'] = b.mode_of_payment
-            response_data['total_participants'] = total_participants
-            response_data['pk'] = pk
-            response_data['bk'] = new_booking.pk
+            data['html_bookings_list'] = render_to_string('portal/event_participant_list.html', {'bookings' : update_bookings, 'event' : event})
+
+            data['total_participants'] = total_participants 
             
-            return HttpResponse(json.dumps(response_data), content_type="application/json")
+            return JsonResponse(data)
+
 
 # Edit bookings from an event
 def edit_booking(request, pk, bk):
@@ -181,14 +185,28 @@ def edit_booking(request, pk, bk):
         }
 
     return render(request, 'portal/booking_edit_form.html', context)
+    
 
 # Delete an existing booking
-def delete_booking(request, bk):
+def delete_booking(request, pk, bk):
+
+    event = get_object_or_404(Event, pk=pk)
 
     booking = get_object_or_404(Booking, pk=bk)
+
     booking.delete()
 
-    return HttpResponseRedirect(reverse('index'))
+    update_bookings = event.bookings.all()
+
+    total_participants = event.bookings.all().aggregate(Sum('participants_count'))['participants_count__sum']
+
+    data = dict()
+
+    data['html_bookings_list'] = render_to_string('portal/event_participant_list.html', {'bookings' : update_bookings, 'event' : event})
+
+    data['total_participants'] = total_participants 
+
+    return JsonResponse(data)
 
    
 

@@ -74,11 +74,13 @@
                 $('.datepicker').datepicker({format : 'dd/mm/yyyy'});
                 $('select').formSelect();
                 $('.modal').modal();
-                
-                {% block scripts %}{% endblock %}
+        
                 
             })
         </script>
+
+        {% block scripts %}
+        {% endblock %}
 
 
     </body>

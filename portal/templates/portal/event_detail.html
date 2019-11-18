@@ -1,5 +1,13 @@
 {% extends "base_generic.html" %}
 
+{% load static %}
+
+{% block scripts %}
+
+<script src="{% static 'portal/js/portal.js' %}"></script>
+
+{% endblock %}
+
 {% block content %}
     <span class="card-title">{{event.event_name}}-{{event.event_date}}</span>
 
@@ -12,26 +20,29 @@
     <a class="waves-effect waves-light btn" href = "{% url 'event-edit' pk=event.pk %}">Edit event</a>
     <a class="waves-effect waves-light btn modal-trigger" href = "#delete-event">Delete Event</a>
    
-    <div id="delete-event" class="modal">
+    <div id = 'delete-event' class="modal">
         <div class="modal-content">
-              <h4>Delete Event: {{event.event_name}}</h4>
-              <p>Are you sure you want to delete the event?</p>
+            <h4>Delete Event: {{event.event_name}}</h4>
+            <p>Are you sure you want to delete the event?</p>
         </div>
         <div class="modal-footer">
-              <a href="{% url 'event-delete' pk=event.pk %}" class="modal-close waves-effect waves-green btn-flat">Yes</a>
-              <a href="#!" class="modal-close waves-effect waves-green btn-flat">No</a>
+            <a href="{% url 'event-delete' pk=event.pk %}" class="waves-effect waves-green btn-flat">Yes</a>
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">No</a>
         </div>
     </div>
     
-    <div id="delete-booking" class="modal">
-        <div class="modal-content">
-              <h4>Delete booking/s by {{booking.booking_name}}</h4>
-              <p>Are you sure you want to delete this booking?</p>
-        </div>
-        <div class="modal-footer">
-              <a href="{% url 'event-delete' pk=event.pk %}" class="modal-close waves-effect waves-green btn-flat">Yes</a>
-              <a href="#!" class="modal-close waves-effect waves-green btn-flat">No</a>
-        </div>
+    <div id="modal-delete-booking" class="modal">
+            <form method="post" action="" id="post-delete-booking">
+                    {% csrf_token %}
+                    <div class="modal-content">
+                        <h4>Delete booking by <strong id ="modal-book-by"></strong>?</h4>
+                        <p>Are you sure you want to delete this booking?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id = "modal-yes-button" href = "" class="modal-close waves-effect waves-green btn-flat" type="submit" name="action">Yes</button> 
+                        <button href="#!" class="modal-close waves-effect waves-green btn-flat" type="button" name="action">No</button>
+                    </div>
+            </form>   
     </div>  
     
     <div class="row">
@@ -46,7 +57,7 @@
                             {{ form.as_table }}
                         </table>
                         </br>
-                        <button class="btn waves-effect waves-light" type="submit" name="action">Submit</button>
+                        <button id = "js-booking-submit" class="btn waves-effect waves-light" type="submit" name="action" data-url = "{% url 'booking-new' pk=event.pk %}">Submit</button>
                     </form>
                 </div>
             </div>
@@ -60,7 +71,6 @@
                     <span class="card-title">All Bookings</span>
                     <span><h5>Total participants booked : <span id = "total-participants">{{total_participants}}</span></h5></span>
                     <table class="responsive-table">
-                        
                             <thead>
                                 <tr>
                                     <th>Booked by</th>
@@ -73,59 +83,14 @@
                                 </tr>
                             </thead>
                             <tbody id = "booking-list">
-                            {% for booking in bookings%}
-                                <tr id = "booking-{{booking.pk}}">
-                                    <td>{{ booking.booked_by }}</td>
-                                    <td>{{ booking.participants_count }}</td>
-                                    <td>{{ booking.contact_number }}</td>
-                                    <td>{{ booking.date_of_payment }}</td>
-                                    <td>{{ booking.mode_of_payment }}</td>
-                                    <td>
-                                        <a class="btn waves-effect waves-light" 
-                                            href="{% url 'booking-edit' pk=event.pk bk=booking.pk %}">
-                                            <i class="material-icons">edit</i>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a class = "btn waves-effect waves-light modal-trigger"
-                                            href = "#delete-booking">
-                                            <i class="material-icons">delete</i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
+                                {%include 'portal/event_participant_list.html'%}
                             </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
+    
 {% endblock %}
 
-{% block scripts %}
-
-    $('#post-form').on('submit', function(event){
-        event.preventDefault();
-        var serializedData = $(this).serialize();
-
-        $.ajax({
-            type : 'POST',
-            url : "{% url 'booking-new' pk=event.pk %}",
-            data : serializedData,
-            success : function(data){
-                $('#post-form')[0].reset();
-                $('#total-participants').text(data.total_participants);
-                console.log(data.pk)
-                $('#booking-list').append("<tr> <td>" + data.booked_by 
-                + "</td> <td>" + data.participants_count 
-                + "</td> <td>" + data.contact_number 
-                + "</td> <td>" + data.date_of_payment 
-                + "</td> <td>" + data.mode_of_payment
-                + "</td> <td>" + "<a href='"+ data.pk + "/booking/" + data.bk + "/edit'><i class='material-icons'>edit</i></a>"
-                + "</td> <td>" + "<a href='"+ data.pk + "/booking/" + data.bk + "/delete'><i class='material-icons'>delete</i></a>"
-                +  "</td> </tr>" );
-            },
-        })
-    });
-
-{% endblock %}

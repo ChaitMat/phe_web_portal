@@ -1,1 +1,1 @@
-web: gunicorn phe_web_portal.wsgi
+web: gunicorn phe_web_portal.wsgi --log-file -

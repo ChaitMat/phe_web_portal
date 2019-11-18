@@ -122,6 +122,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
+<<<<<<< HEAD
 
 django_heroku.settings(locals())
+||||||| merged common ancestors
+=======
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+)
+>>>>>>> 440ba71d710074225d6255fa1f445f4768cd431d

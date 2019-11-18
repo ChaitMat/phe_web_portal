@@ -25,7 +25,7 @@ SECRET_KEY = ')(hf)@2hcq*p@%o2c49sfg6v+369mx+hi3y1^j=%#^easwc35r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['http://phe-web-portal.f5nttwdd2u.ap-south-1.elasticbeanstalk.com/']
+ALLOWED_HOSTS = ['http://phe-web-portal.qdbptkkpia.ap-south-1.elasticbeanstalk.com']
 
 
 # Application definition

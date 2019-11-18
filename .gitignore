@@ -124,3 +124,9 @@ dmypy.json
 .pyre/
 
 .directory
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+*.sqlite3
